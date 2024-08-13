@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Redeem</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background: #111;
+            padding: 10px;
+            text-align: center;
+        }
+        .header img {
+            height: 50px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .section {
+            background: #444;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        .section h2 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 24px;
+            color: #ffd700;
+        }
+        .section img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+        .form-container {
+            background: #555;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .form-container label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        .form-container input[type="text"], .form-container input[type="password"], .form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #777;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .form-container textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        .form-container input[type="submit"] {
+            background: #ffd700;
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        .form-container input[type="submit"]:hover {
+            background: #e5b800;
+        }
+        .result {
+            background: #666;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .buy-button {
+            display: inline-block;
+            background: #ffd700;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 18px;
+            transition: background 0.3s;
+        }
+        .buy-button:hover {
+            background: #e5b800;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="https://i.ibb.co/G0jmjr5/minecraft-logo.png" alt="Minecraft Logo">
+    </div>
+    <div class="container">
+        <div class="section">
+            <h2>Generate Redeem Code</h2>
+            <img src="https://i.ibb.co/9YZ5mv5/minecraft-image.png" alt="Generate Code Image">
+            <div class="form-container">
+                <form id="generateForm">
+                    <input type="submit" value="Generate Redeem Code">
+                </form>
+                <div id="redeemCode" class="result"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Save Redeem Code</h2>
+            <img src="https://i.ibb.co/1nJPtXJ/minecraft-save.png" alt="Save Code Image">
+            <div class="form-container">
+                <form id="saveForm">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" required>
+                    
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" required>
+                    
+                    <label for="text">Data:</label>
+                    <textarea id="text" required></textarea>
+                    
+                    <input type="submit" value="Save">
+                </form>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Retrieve Redeem Code</h2>
+            <div class="form-container">
+                <form id="retrieveForm">
+                    <label for="retrieveName">Name:</label>
+                    <input type="text" id="retrieveName" required>
+                    
+                    <label for="retrievePassword">Password:</label>
+                    <input type="password" id="retrievePassword" required>
+                    
+                    <input type="submit" value="Retrieve">
+                </form>
+                <div id="result" class="result"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Buy Redeem Code</h2>
+            <a href="https://discord.gg/gRhEufUUwC" class="buy-button" target="_blank">Buy Now</a>
+        </div>
+    </div>
+    
+    <script>
+        function generateRedeemCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let redeemCode = '';
+            for (let i = 0; i < 16; i++) {
+                redeemCode += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return redeemCode;
+        }
+
+        document.getElementById('generateForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const code = generateRedeemCode();
+            document.getElementById('redeemCode').innerText = `Your Redeem Code: ${code}`;
+        });
+
+        function saveData(name, password, text) {
+            localStorage.setItem(name, JSON.stringify({ password, text }));
+            alert('Data saved successfully!');
+        }
+
+        document.getElementById('saveForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const password = document.getElementById('password').value;
+            const text = document.getElementById('text').value;
+            
+            saveData(name, password, text);
+        });
+
+        function retrieveData(name, password) {
+            const data = JSON.parse(localStorage.getItem(name));
+            return data && data.password === password ? `Data: ${data.text}` : 'Invalid name or password';
+        }
+
+        document.getElementById('retrieveForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('retrieveName').value;
+            const password = document.getElementById('retrievePassword').value;
+            
+            const result = retrieveData(name, password);
+            document.getElementById('result').innerText = result;
+        });
+    </script>
+</body>
+</html>
+
+
